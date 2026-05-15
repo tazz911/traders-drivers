@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(node index.js)",
+      "PowerShell(cd \"C:\\\\Users\\\\Ben_y\\\\OneDrive\\\\Desktop\\\\traders-drivers2\\\\server\"; $job = Start-Job { node \"C:\\\\Users\\\\Ben_y\\\\OneDrive\\\\Desktop\\\\traders-drivers2\\\\server\\\\index.js\" 2>&1 }; Start-Sleep -Seconds 8; Receive-Job $job; Stop-Job $job; Remove-Job $job)",
+      "Bash(python -c ' *)",
+      "PowerShell(py -3 --version 2>&1; Get-ChildItem \"$env:LOCALAPPDATA\\\\Programs\\\\Python\" -ErrorAction SilentlyContinue | Select-Object Name)",
+      "PowerShell(node --version 2>&1)",
+      "PowerShell(npm --version 2>&1)"
+    ]
+  }
+}
