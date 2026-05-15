@@ -1,21 +1,27 @@
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 import UserModel from './models/Users.js';
 import OrderModel from './models/Orders.js';
 import bcrypt from 'bcrypt';
 
+dotenv.config();
+
 const app = express();
+const PORT = process.env.PORT || 3002;
+const JWT_SECRET = process.env.JWT_SECRET;
 
 app.use(cors());
 app.use(express.json());
 
-app.listen(3002, () => {
-    console.log("Server Connected...")
+app.listen(PORT, () => {
+    console.log(`Server Connected on port ${PORT}...`)
 });
 
 // ── Database Connection ───────────────────────────────────────────────
-const conStr = "mongodb+srv://admin:admin123@cluster0.wdwfrgb.mongodb.net/T&D?appName=Cluster0";
+const conStr = process.env.MONGO_URI;
 mongoose.connect(conStr)
     .then(() => { console.log("Database Connected..") })
     .catch(error => { console.log("Database Error..." + error) });
@@ -47,6 +53,18 @@ function calculateFare(distance, weight, vehicleType, isUrgent) {
         currency: "OMR"
     };
 }
+
+// ── Authentication Middleware ─────────────────────────────────────────
+const authMiddleware = (req, res, next) => {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) return res.status(401).json({ message: 'No token provided' });
+
+    jwt.verify(token, JWT_SECRET, (err, decoded) => {
+        if (err) return res.status(401).json({ message: 'Invalid or expired token' });
+        req.userId = decoded.id;
+        next();
+    });
+};
 
 // ── USER ROUTES ───────────────────────────────────────────────────────
 
@@ -96,15 +114,19 @@ app.post("/login", async (req, res) => {
         const user = await UserModel.findOne({ email });
         if (user) {
             const match = await bcrypt.compare(password, user.password);
-            if (match)
-                res.send({ user, message: "success" });
+            if (match) {
+                const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
+                const userObj = user.toObject();
+                delete userObj.password;
+                res.json({ user: userObj, token, message: "success" });
+            }
             else
-                res.send({ message: "Invalid Credentials" });
+                res.status(401).json({ message: "Invalid Credentials" });
         } else {
-            res.send({ message: "Invalid Credentials" });
+            res.status(401).json({ message: "Invalid Credentials" });
         }
     } catch (error) {
-        res.send("Read Error..." + error);
+        res.status(500).json({ message: "Login failed: " + error.message });
     }
 });
 

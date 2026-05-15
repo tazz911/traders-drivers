@@ -1,9 +1,12 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
 import UserModel from './models/Users.js';
 import OrderModel from './models/Orders.js';
 
-const conStr = "mongodb+srv://admin:admin123@cluster0.wdwfrgb.mongodb.net/T&D?appName=Cluster0";
+dotenv.config();
+
+const conStr = process.env.MONGO_URI;
 
 const VEHICLE_RATES = {
     bike:         { multiplier: 1.0, basePerKm: 0.150 },

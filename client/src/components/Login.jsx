@@ -15,6 +15,7 @@ const Login = () => {
     const dispatch   = useDispatch();
     const message    = useSelector((s) => s.user.message);
     const isSuccess  = useSelector((s) => s.user.isSuccess);
+    const isLoading  = useSelector((s) => s.user.isLoading);
     const navigate   = useNavigate();
 
     const { register, handleSubmit: submitForm, formState: { errors } } =
@@ -68,9 +69,11 @@ const Login = () => {
                     <button
                         className="td-btn-full"
                         data-testid="login-button"
+                        disabled={isLoading}
                         onClick={submitForm(handleSubmit)}
+                        style={{ opacity: isLoading ? 0.6 : 1, cursor: isLoading ? 'not-allowed' : 'pointer' }}
                     >
-                        Sign In
+                        {isLoading ? 'Signing in...' : 'Sign In'}
                     </button>
 
                     <p className="td-auth-link">
