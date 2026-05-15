@@ -52,15 +52,10 @@ const Register = () => {
                         {/* Full Name */}
                         <div className="td-input-row">
                             <div className="td-input-group">
-                                <label>First Name</label>
-                                <input className="td-input" type="text" placeholder="John"
+                                <label>Fullname</label>
+                                <input className="td-input" type="text" 
                                     {...register('fullName', { onChange: (e) => setFullName(e.target.value) })} />
                                 {errors.fullName && <p className="td-error">{errors.fullName.message}</p>}
-                            </div>
-                            <div className="td-input-group">
-                                <label>Last Name</label>
-                                <input className="td-input" type="text" placeholder="Doe" disabled
-                                    style={{ opacity: .5 }} />
                             </div>
                         </div>
 
@@ -73,21 +68,21 @@ const Register = () => {
 
                         <div className="td-input-group">
                             <label>Phone</label>
-                            <input className="td-input" type="tel" placeholder="+1 234 567 8900"
+                            <input className="td-input" type="tel" placeholder="+968"
                                 {...register('phone', { onChange: (e) => setPhone(e.target.value) })} />
                             {errors.phone && <p className="td-error">{errors.phone.message}</p>}
                         </div>
 
                         <div className="td-input-group">
                             <label>Password</label>
-                            <input className="td-input" type="password" placeholder="••••••••"
+                            <input className="td-input" type="password" placeholder="Min 8 digts"
                                 {...register('password', { onChange: (e) => setPassword(e.target.value) })} />
                             {errors.password && <p className="td-error">{errors.password.message}</p>}
                         </div>
 
                         <div className="td-input-group">
                             <label>Confirm Password</label>
-                            <input className="td-input" type="password" placeholder="••••••••"
+                            <input className="td-input" type="password" 
                                 {...register('confirmPassword')} />
                             {errors.confirmPassword && <p className="td-error">{errors.confirmPassword.message}</p>}
                         </div>
@@ -97,8 +92,8 @@ const Register = () => {
                             <select className="td-input" data-testid="usertype-select"
                                 {...register('userType', { onChange: (e) => setUserType(e.target.value) })}>
                                 <option value="">Select user type</option>
-                                <option value="trader">Trader (Goods Sender)</option>
-                                <option value="driver">Driver (Transporter)</option>
+                                <option value="trader">Trader</option>
+                                <option value="driver">Driver</option>
                             </select>
                             {errors.userType && <p className="td-error">{errors.userType.message}</p>}
                         </div>
@@ -118,7 +113,6 @@ const Register = () => {
                                         <select className="td-input" onChange={(e) => setVehicle(e.target.value)}>
                                             <option value="">Select vehicle</option>
                                             <option value="bike">Bike</option>
-                                            <option value="auto">Auto / Tuk-Tuk</option>
                                             <option value="truck_small">Small Truck (up to 2T)</option>
                                             <option value="truck_medium">Medium Truck (2–5T)</option>
                                             <option value="truck_large">Large Truck (5–10T)</option>
@@ -153,11 +147,9 @@ const Register = () => {
                                         <label>Business Category</label>
                                         <select className="td-input" onChange={(e) => setBizCat(e.target.value)}>
                                             <option value="">Select</option>
-                                            <option value="agriculture">Agriculture</option>
-                                            <option value="manufacturing">Manufacturing</option>
-                                            <option value="retail">Retail</option>
-                                            <option value="wholesale">Wholesale</option>
-                                            <option value="perishables">Perishables</option>
+                                            <option value="Cloths">Cloths</option>
+                                            <option value="Food">Food</option>
+                                            <option value="Equipment">Equipment</option>
                                             <option value="other">Other</option>
                                         </select>
                                     </div>
