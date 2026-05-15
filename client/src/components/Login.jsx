@@ -32,7 +32,7 @@ const Login = () => {
             <Header />
             <div className="td-auth-center">
                 <div className="td-auth-card">
-                    <span className="td-demo-badge">DEMO</span>
+                    
 
                     <div className="td-auth-icon"><FaSignInAlt /></div>
                     <h2>Welcome Back</h2>
@@ -59,7 +59,6 @@ const Login = () => {
                         <input
                             className="td-input"
                             type="password"
-                            placeholder="••••••••"
                             data-testid="password-input"
                             {...register('password', { onChange: (e) => setPassword(e.target.value) })}
                         />
@@ -78,9 +77,6 @@ const Login = () => {
 
                     <p className="td-auth-link">
                         Don't have an account? <Link to="/register">Register</Link>
-                    </p>
-                    <p className="td-demo-note">
-                        This is a demo interface — do not authenticate with real credentials.
                     </p>
                 </div>
             </div>
