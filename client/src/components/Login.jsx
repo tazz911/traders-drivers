@@ -59,6 +59,7 @@ const Login = () => {
                         <input
                             className="td-input"
                             type="password"
+                            placeholder="••••••••"
                             data-testid="password-input"
                             {...register('password', { onChange: (e) => setPassword(e.target.value) })}
                         />

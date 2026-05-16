@@ -15,15 +15,23 @@ const MapView = ({ order }) => {
     const [selected, setSelected] = useState(null);
     const { isLoaded } = useJsApiLoader({ googleMapsApiKey: GMAPS_KEY, libraries: ['places'] });
 
+    const pickup   = order?.pickupLat   ? { lat: order.pickupLat,   lng: order.pickupLng   } : null;
+    const delivery = order?.deliveryLat ? { lat: order.deliveryLat, lng: order.deliveryLng } : null;
+    const driver   = order?.driver?.[0]?.lat ? { lat: order.driver[0].lat, lng: order.driver[0].lng } : null;
+
     if (!isLoaded) return (
         <div style={{ ...mapStyle, background: '#161b22', border: '1px solid #30363d', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#7d8590', fontSize: '.9rem' }}>
             Loading map...
         </div>
     );
 
-    const pickup   = order?.pickupLat   ? { lat: order.pickupLat,   lng: order.pickupLng   } : null;
-    const delivery = order?.deliveryLat ? { lat: order.deliveryLat, lng: order.deliveryLng } : null;
-    const driver   = order?.driver?.[0]?.lat ? { lat: order.driver[0].lat, lng: order.driver[0].lng } : null;
+    if (!pickup && !driver) return (
+        <div style={{ ...mapStyle, background: '#161b22', border: '1px solid #30363d', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '.5rem', color: '#7d8590', fontSize: '.9rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>📍</span>
+            Enable location on pickup to see the map
+        </div>
+    );
+
     const center   = pickup || driver || MUSCAT;
 
     return (

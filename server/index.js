@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import UserModel from './models/Users.js';
 import OrderModel from './models/Orders.js';
+import PaymentModel from './models/Payments.js';
 import bcrypt from 'bcrypt';
 
 dotenv.config();
@@ -113,6 +114,8 @@ app.post("/login", async (req, res) => {
         const { email, password } = req.body;
         const user = await UserModel.findOne({ email });
         if (user) {
+            if (!user.isActive)
+                return res.status(403).json({ message: "Account has been deactivated. Contact admin." });
             const match = await bcrypt.compare(password, user.password);
             if (match) {
                 const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
@@ -130,6 +133,48 @@ app.post("/login", async (req, res) => {
     }
 });
 
+// POST admin login  →  http://localhost:3002/adminLogin
+app.post("/adminLogin", async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await UserModel.findOne({ email });
+        if (!user || !user.isAdmin)
+            return res.status(401).json({ message: "Invalid admin credentials." });
+        const match = await bcrypt.compare(password, user.password);
+        if (!match)
+            return res.status(401).json({ message: "Invalid admin credentials." });
+        res.json({ message: "success" });
+    } catch (error) {
+        res.status(500).json({ message: "Login failed: " + error.message });
+    }
+});
+
+// PUT deactivate user  →  http://localhost:3002/deactivateUser/:id
+app.put("/deactivateUser/:id", async (req, res) => {
+    try {
+        const user = await UserModel.findByIdAndUpdate(
+            req.params.id,
+            { isActive: false },
+            { new: true }
+        );
+        if (!user) return res.status(404).json({ message: "User not found" });
+        res.json({ message: "User deactivated" });
+    } catch (error) {
+        res.status(500).json({ message: "Error: " + error.message });
+    }
+});
+
+// PUT update driver profile  →  http://localhost:3002/updateProfile
+app.put("/updateProfile", async (req, res) => {
+    try {
+        const { email, vehicleType, profilePic } = req.body;
+        await UserModel.findOneAndUpdate({ email }, { vehicleType, profilePic });
+        res.json({ message: "Profile Updated" });
+    } catch (error) {
+        res.status(500).json({ message: "Update failed: " + error.message });
+    }
+});
+
 // PUT update driver location  →  http://localhost:3002/updateLocation
 app.put("/updateLocation", async (req, res) => {
     try {
@@ -143,13 +188,14 @@ app.put("/updateLocation", async (req, res) => {
 
 // ── ORDER ROUTES ──────────────────────────────────────────────────────
 
-// GET all orders for a trader  →  http://localhost:3002/getOrders?email=x&status=y
+// GET all orders  →  http://localhost:3002/getOrders?email=x&status=y&driverEmail=z
 app.get("/getOrders", async (req, res) => {
     try {
-        const { email, status } = req.query;
+        const { email, status, driverEmail } = req.query;
         let query = {};
-        if (email)  query.traderEmail = email;
-        if (status) query.status = status;
+        if (email)       query.traderEmail = email;
+        if (driverEmail) query.driverEmail = driverEmail;
+        if (status)      query.status = status;
 
         const orders = await OrderModel.aggregate([
             { $match: query },
@@ -331,15 +377,37 @@ app.put("/cancelOrder", async (req, res) => {
 // PUT pay order  →  http://localhost:3002/payOrder
 app.put("/payOrder", async (req, res) => {
     try {
-        const { orderid, paymentMethod } = req.body;
+        const { orderid, cardholderName, cardNumber, expiry, cvv } = req.body;
+
+        if (!cardholderName || !cardNumber || !expiry || !cvv)
+            return res.status(400).json({ message: "All card fields are required" });
+
         const order = await OrderModel.findOne({ _id: orderid });
-        if (!order) return res.send({ message: "Order Not Found" });
-        order.isPaid = true;
-        order.paymentMethod = paymentMethod;
+        if (!order) return res.status(404).json({ message: "Order Not Found" });
+
+        const last4           = cardNumber.replace(/\s/g, '').slice(-4);
+        const hashedCardNumber = await bcrypt.hash(cardNumber.replace(/\s/g, ''), 10);
+        const hashedCVV        = await bcrypt.hash(cvv, 10);
+
+        await PaymentModel.create({
+            orderId:       order._id,
+            traderEmail:   order.traderEmail,
+            amount:        order.estimatedFare,
+            currency:      order.currency,
+            cardholderName,
+            last4,
+            expiry,
+            hashedCardNumber,
+            hashedCVV,
+        });
+
+        order.isPaid       = true;
+        order.paymentMethod = 'card';
         await order.save();
-        res.send({ message: "Payment Successful" });
+
+        res.json({ message: "Payment Successful" });
     } catch (error) {
-        res.send("Read Error..." + error);
+        res.status(500).json({ message: "Payment Error: " + error.message });
     }
 });
 

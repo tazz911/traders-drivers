@@ -50,13 +50,11 @@ const Register = () => {
 
                     <form onSubmit={handleSubmit(onSubmit)}>
                         {/* Full Name */}
-                        <div className="td-input-row">
-                            <div className="td-input-group">
-                                <label>Fullname</label>
-                                <input className="td-input" type="text" 
-                                    {...register('fullName', { onChange: (e) => setFullName(e.target.value) })} />
-                                {errors.fullName && <p className="td-error">{errors.fullName.message}</p>}
-                            </div>
+                        <div className="td-input-group">
+                            <label>Full Name</label>
+                            <input className="td-input" type="text" placeholder="Mohammed al-Salmi"
+                                {...register('fullName', { onChange: (e) => setFullName(e.target.value) })} />
+                            {errors.fullName && <p className="td-error">{errors.fullName.message}</p>}
                         </div>
 
                         <div className="td-input-group">

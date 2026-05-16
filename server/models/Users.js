@@ -20,7 +20,9 @@ const UserSchema = mongoose.Schema({
     lat:                { type: Number, default: null },
     lng:                { type: Number, default: null },
     rating:             { type: Number, default: 5.0 },
-    totalTrips:         { type: Number, default: 0 }
+    totalTrips:         { type: Number, default: 0 },
+    isAdmin:            { type: Boolean, default: false },
+    profilePic:         { type: String, default: null }
 }, { timestamps: { createdAt: true, updatedAt: false } });
 
 const UserModel = mongoose.model("Usertbl", UserSchema, "Usertbl");

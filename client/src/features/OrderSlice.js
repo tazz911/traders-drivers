@@ -4,6 +4,7 @@ import axios from 'axios';
 const initialState = {
     orders: [],
     availableOrders: [],
+    driverOrders: [],
     message: "",
     status: "idle",
     isLoading: false,
@@ -19,6 +20,15 @@ export const getOrders = createAsyncThunk("order/getOrders", async ({ email, sta
         if (status) params.push(`status=${status}`);
         if (params.length) url += "?" + params.join("&");
         const response = await axios.get(url);
+        return response.data.orders;
+    } catch (error) {
+        console.log("Server Error.." + error);
+    }
+});
+
+export const getDriverOrders = createAsyncThunk("order/getDriverOrders", async ({ driverEmail } = {}) => {
+    try {
+        const response = await axios.get(`http://localhost:3002/getOrders?driverEmail=${driverEmail}&status=accepted`);
         return response.data.orders;
     } catch (error) {
         console.log("Server Error.." + error);
@@ -107,6 +117,7 @@ export const OrderSlice = createSlice({
         .addCase(getOrders.rejected, (state) => { state.isLoading = false; state.isError = true; state.status = "rejected"; })
 
         .addCase(getAvailableOrders.fulfilled, (state, action) => { state.availableOrders = action.payload || []; })
+        .addCase(getDriverOrders.fulfilled, (state, action) => { state.driverOrders = action.payload || []; })
 
         .addCase(saveOrder.pending, (state) => { state.isLoading = true; state.status = "pending"; })
         .addCase(saveOrder.fulfilled, (state, action) => { state.isLoading = false; state.isSuccess = true; state.status = "saved"; state.message = action.payload; })

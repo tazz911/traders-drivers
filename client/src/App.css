@@ -212,7 +212,7 @@
 .td-extra-fields h6 { color: #f5a623; font-size: .82rem; margin-bottom: .75rem; }
 
 /* ── Dashboard ── */
-.td-dashboard { background: #0d1117; min-height: 100vh; }
+.td-dashboard { background: #0d1117; min-height: 100vh; display: flex; flex-direction: column; }
 .td-dash-header {
   background: #161b22;
   border-bottom: 1px solid #30363d;
@@ -248,7 +248,7 @@
 }
 .td-tab:hover { color: #e6edf3; }
 .td-tab.active { color: #f5a623; border-bottom-color: #f5a623; }
-.td-dash-body { padding: 2rem; }
+.td-dash-body { padding: 2rem; flex: 1; }
 
 /* ── Trader form 2-column layout ── */
 .td-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
