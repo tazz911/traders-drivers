@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const apiClient = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || 'https://traders-drivers-production.up.railway.app'
+    baseURL: 'https://traders-drivers-production.up.railway.app'
 });
 
 apiClient.interceptors.request.use((config) => {
