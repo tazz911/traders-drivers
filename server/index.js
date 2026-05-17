@@ -14,10 +14,7 @@ const app = express();
 const PORT = process.env.PORT || 3002;
 const JWT_SECRET = process.env.JWT_SECRET;
 
-app.use(cors({
-    origin: process.env.CLIENT_URL || '*',
-    credentials: true
-}));
+app.use(cors());
 app.use(express.json());
 
 app.listen(PORT, () => {
