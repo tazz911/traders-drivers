@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
+import apiClient from '../api/axiosConfig';
 import { FaUser, FaSave } from 'react-icons/fa';
 
 const VEHICLE_LABELS = {
@@ -19,7 +19,7 @@ const DriverProfile = () => {
 
     const handleSave = async () => {
         try {
-            const res = await axios.put('http://localhost:3002/updateProfile', {
+            const res = await apiClient.put('/updateProfile', {
                 email: user.email, vehicleType, profilePic
             });
             setMessage(res.data.message);

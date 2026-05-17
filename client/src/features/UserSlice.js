@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import apiClient from '../api/axiosConfig';
 
 const initialState = {
     user: {},
@@ -11,7 +11,7 @@ const initialState = {
 
 export const addUser = createAsyncThunk("user/addUser", async (userData, { rejectWithValue }) => {
     try {
-        const response = await axios.post("http://localhost:3002/register", userData);
+        const response = await apiClient.post("/register", userData);
         return response.data.message;
     } catch (error) {
         return rejectWithValue(error.response?.data?.message || 'Registration failed');
@@ -20,7 +20,7 @@ export const addUser = createAsyncThunk("user/addUser", async (userData, { rejec
 
 export const login = createAsyncThunk("user/login", async (userData, { rejectWithValue }) => {
     try {
-        const response = await axios.post("http://localhost:3002/login", userData);
+        const response = await apiClient.post("/login", userData);
         if (response.data.token) {
             localStorage.setItem('authToken', response.data.token);
             localStorage.setItem('user', JSON.stringify(response.data.user));
@@ -33,10 +33,7 @@ export const login = createAsyncThunk("user/login", async (userData, { rejectWit
 
 export const updateLocation = createAsyncThunk("user/updateLocation", async (locData, { rejectWithValue }) => {
     try {
-        const token = localStorage.getItem('authToken');
-        const response = await axios.put("http://localhost:3002/updateLocation", locData, {
-            headers: { Authorization: `Bearer ${token}` }
-        });
+        const response = await apiClient.put("/updateLocation", locData);
         return locData;
     } catch (error) {
         return rejectWithValue(error.response?.data?.message || 'Update failed');
@@ -103,4 +100,3 @@ export const UserSlice = createSlice({
 
 export const { setLocation, setUser, logout } = UserSlice.actions;
 export default UserSlice.reducer;
-

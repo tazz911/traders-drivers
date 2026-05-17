@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import apiClient from '../api/axiosConfig';
 import Header from './Header';
 import Footer from './Footer';
 import { FaShieldAlt, FaUsers, FaBoxOpen, FaTachometerAlt, FaCheckCircle, FaTruck, FaClock } from 'react-icons/fa';
 import moment from 'moment';
-
-const API = 'http://localhost:3002';
 
 const Admin = () => {
     const [authed,      setAuthed]     = useState(false);
@@ -19,7 +17,7 @@ const Admin = () => {
 
     const handleLogin = async () => {
         try {
-            const res = await axios.post(`${API}/adminLogin`, { email: adminEmail, password: adminPwd });
+            const res = await apiClient.post(`/adminLogin`, { email: adminEmail, password: adminPwd });
             if (res.data.message === 'success') {
                 setAuthed(true);
                 setError('');
@@ -34,7 +32,7 @@ const Admin = () => {
     const handleTerminate = async (userId) => {
         if (!window.confirm('Deactivate this user? They will no longer be able to log in.')) return;
         try {
-            await axios.put(`${API}/deactivateUser/${userId}`);
+            await apiClient.put(`/deactivateUser/${userId}`);
             setUsers((prev) => prev.map((u) => u._id === userId ? { ...u, isActive: false } : u));
         } catch {
             alert('Failed to deactivate user.');
@@ -43,8 +41,8 @@ const Admin = () => {
 
     useEffect(() => {
         if (!authed) return;
-        axios.get(`${API}/getUsers`).then((r) => setUsers(r.data || []));
-        axios.get(`${API}/getOrders`).then((r) => setOrders(r.data?.orders || []));
+        apiClient.get(`/getUsers`).then((r) => setUsers(r.data || []));
+        apiClient.get(`/getOrders`).then((r) => setOrders(r.data?.orders || []));
     }, [authed]);
 
     const totalUsers     = users.length;

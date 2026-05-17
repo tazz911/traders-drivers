@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import apiClient from '../api/axiosConfig';
 
 const initialState = {
     orders: [],
@@ -14,12 +14,11 @@ const initialState = {
 
 export const getOrders = createAsyncThunk("order/getOrders", async ({ email, status } = {}) => {
     try {
-        let url = "http://localhost:3002/getOrders";
         const params = [];
         if (email)  params.push(`email=${email}`);
         if (status) params.push(`status=${status}`);
-        if (params.length) url += "?" + params.join("&");
-        const response = await axios.get(url);
+        const query = params.length ? "?" + params.join("&") : "";
+        const response = await apiClient.get(`/getOrders${query}`);
         return response.data.orders;
     } catch (error) {
         console.log("Server Error.." + error);
@@ -28,7 +27,7 @@ export const getOrders = createAsyncThunk("order/getOrders", async ({ email, sta
 
 export const getDriverOrders = createAsyncThunk("order/getDriverOrders", async ({ driverEmail } = {}) => {
     try {
-        const response = await axios.get(`http://localhost:3002/getOrders?driverEmail=${driverEmail}&status=accepted`);
+        const response = await apiClient.get(`/getOrders?driverEmail=${driverEmail}&status=accepted`);
         return response.data.orders;
     } catch (error) {
         console.log("Server Error.." + error);
@@ -37,7 +36,7 @@ export const getDriverOrders = createAsyncThunk("order/getDriverOrders", async (
 
 export const getAvailableOrders = createAsyncThunk("order/getAvailableOrders", async () => {
     try {
-        const response = await axios.get("http://localhost:3002/getAvailableOrders");
+        const response = await apiClient.get("/getAvailableOrders");
         return response.data.orders;
     } catch (error) {
         console.log("Server Error.." + error);
@@ -46,7 +45,7 @@ export const getAvailableOrders = createAsyncThunk("order/getAvailableOrders", a
 
 export const saveOrder = createAsyncThunk("order/saveOrder", async (orderData) => {
     try {
-        const response = await axios.post("http://localhost:3002/saveOrder", orderData);
+        const response = await apiClient.post("/saveOrder", orderData);
         return response.data.message;
     } catch (error) {
         console.log("Server Error.." + error);
@@ -55,7 +54,7 @@ export const saveOrder = createAsyncThunk("order/saveOrder", async (orderData) =
 
 export const updOrder = createAsyncThunk("order/updOrder", async (odata) => {
     try {
-        const response = await axios.put("http://localhost:3002/updOrder", odata);
+        const response = await apiClient.put("/updOrder", odata);
         return response.data.message;
     } catch (error) {
         console.log("Server Error.." + error);
@@ -64,7 +63,7 @@ export const updOrder = createAsyncThunk("order/updOrder", async (odata) => {
 
 export const delOrder = createAsyncThunk("order/delOrder", async (orderid) => {
     try {
-        const response = await axios.delete(`http://localhost:3002/delOrder/${orderid}`);
+        const response = await apiClient.delete(`/delOrder/${orderid}`);
         return response.data.message;
     } catch (error) {
         console.log("Server Error.." + error);
@@ -73,7 +72,7 @@ export const delOrder = createAsyncThunk("order/delOrder", async (orderid) => {
 
 export const acceptOrder = createAsyncThunk("order/acceptOrder", async (odata) => {
     try {
-        const response = await axios.put("http://localhost:3002/acceptOrder", odata);
+        const response = await apiClient.put("/acceptOrder", odata);
         return response.data.message;
     } catch (error) {
         console.log("Server Error.." + error);
@@ -82,7 +81,7 @@ export const acceptOrder = createAsyncThunk("order/acceptOrder", async (odata) =
 
 export const completeOrder = createAsyncThunk("order/completeOrder", async (odata) => {
     try {
-        const response = await axios.put("http://localhost:3002/completeOrder", odata);
+        const response = await apiClient.put("/completeOrder", odata);
         return response.data.message;
     } catch (error) {
         console.log("Server Error.." + error);
@@ -91,7 +90,7 @@ export const completeOrder = createAsyncThunk("order/completeOrder", async (odat
 
 export const cancelOrder = createAsyncThunk("order/cancelOrder", async (odata) => {
     try {
-        const response = await axios.put("http://localhost:3002/cancelOrder", odata);
+        const response = await apiClient.put("/cancelOrder", odata);
         return response.data.message;
     } catch (error) {
         console.log("Server Error.." + error);
@@ -100,7 +99,7 @@ export const cancelOrder = createAsyncThunk("order/cancelOrder", async (odata) =
 
 export const payOrder = createAsyncThunk("order/payOrder", async (odata) => {
     try {
-        const response = await axios.put("http://localhost:3002/payOrder", odata);
+        const response = await apiClient.put("/payOrder", odata);
         return response.data.message;
     } catch (error) {
         console.log("Server Error.." + error);
