@@ -10,7 +10,7 @@ const UserProfile = () => {
             <div style={{ textAlign: 'center' }}>
                 <strong>{user?.fullName}</strong>
                 <p style={{ color: '#666', fontSize: '.85rem', margin: '.25rem 0' }}>
-                    {user?.userType === "trader" ? "🏪 Trader" : "🚗 Driver"}
+                    {user?.userType === "trader" ? " Trader" : " Driver"}
                 </p>
                 {user?.userType === "trader" && user?.companyName && (
                     <p style={{ fontSize: '.82rem', color: '#555' }}>{user.companyName}</p>
@@ -18,7 +18,7 @@ const UserProfile = () => {
                 {user?.userType === "driver" && user?.vehicleType && (
                     <p style={{ fontSize: '.82rem', color: '#555' }}>Vehicle: {user.vehicleType}</p>
                 )}
-                <p style={{ fontSize: '.82rem', color: '#777' }}>⭐ {user?.rating || "5.0"}</p>
+                <p style={{ fontSize: '.82rem', color: '#777' }}>rate{user?.rating || "5.0"}</p>
             </div>
         </>
     )
