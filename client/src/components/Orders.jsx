@@ -158,7 +158,7 @@ const Orders = () => {
             {displayOrders.length === 0 && (
                 <div className="td-empty">
                     <div className="td-empty-icon">
-                        {userType === 'trader' ? '📦' : '🔍'}
+                        {userType === 'trader' ? 'Order' : 'search'}
                     </div>
                     <p>
                         {userType === 'trader'
