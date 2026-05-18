@@ -27,7 +27,7 @@ const MapView = ({ order }) => {
 
     if (!pickup && !driver) return (
         <div style={{ ...mapStyle, background: '#161b22', border: '1px solid #30363d', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '.5rem', color: '#7d8590', fontSize: '.9rem' }}>
-            <span style={{ fontSize: '1.5rem' }}>📍</span>
+            <span style={{ fontSize: '1.5rem' }}>Location</span>
             Enable location on pickup to see the map
         </div>
     );
