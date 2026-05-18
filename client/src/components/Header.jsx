@@ -45,7 +45,7 @@ const Header = () => {
                         onChange={(e) => setSearch(e.target.value)}
                     />
                     <button type="submit" className="td-btn-sm" style={{ padding: '.35rem .7rem' }}>
-                        🔍
+                        Search
                     </button>
                 </form>
             )}
@@ -62,7 +62,7 @@ const Header = () => {
                     <>
                         <li>
                             <span style={{ color: '#f5a623', fontWeight: 600, fontSize: '.85rem' }}>
-                                {userType === 'trader' ? '🏪' : '🚛'} {username.split(' ')[0]}
+                                {userType === 'trader' ? 'Trader' : 'Driver'} {username.split(' ')[0]}
                             </span>
                         </li>
                         <li><Link to="/home" className={active('/home')}>Dashboard</Link></li>
