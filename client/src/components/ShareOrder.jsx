@@ -70,7 +70,7 @@ const ShareOrder = () => {
                         <input className="td-input" placeholder="e.g. Muscat"
                             {...register('pickupLocation')} />
                         <button type="button" className="td-btn-sm" onClick={getLocation}
-                            title="Use my location" style={{ padding: '.35rem .75rem', flexShrink: 0 }}>📍</button>
+                            title="Use my location" style={{ padding: '.35rem .75rem', flexShrink: 0 }}>Location</button>
                     </div>
                     {errors.pickupLocation && <p className="td-error">{errors.pickupLocation.message}</p>}
                 </div>
